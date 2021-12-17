@@ -24,12 +24,15 @@ which are about 300 feet thick.''',
 a portion of the largest deposit of freshwater fish 
 fossils in the world. The richest fossil fish deposits 
 are found in multiple limestone layers, which lie some 
-100 feet below the top of the butte. The fossils 
+100 feet below the top , of the butte. The fossils 
 represent several varieties of perch, as well as 
 other freshwater genera and herring similar to those 
 in modern oceans. Other fish such as paddlefish, 
 garpike and stingray are also present.'''
 ]
+
+# importing
+import string
 
 # separators
 separator = '-' * 38
@@ -85,36 +88,43 @@ print(separator, '\nSELECTED TEXT:')
 print(selected_text)
 
 # slicing the text
+punctuation_list = []
+punctuation_list.extend(string.punctuation)
 splited_text_brutto = selected_text.split()
-splited_text = []
+splited_text_cleaned = []
 for word in splited_text_brutto:
-    if not word.endswith('.') and not word.endswith(','):
-        splited_text.append(word)
-    elif word.endswith('.'):
-        splited_text.append(word.rstrip('.'))
-    elif word.endswith(','):
-        splited_text.append(word.rstrip(','))
+    if len(word) == 1 and word in punctuation_list:
+        continue
+    elif word.isalnum():
+        splited_text_cleaned.append(word)
+    else:
+        if ((word[0] in punctuation_list) and (word[-1] in punctuation_list)):
+            splited_text_cleaned.append(word.lstrip(word[0]).rstrip(word[-1]))
+        elif word[0] in punctuation_list:
+            splited_text_cleaned.append(word.lstrip(word[0]))
+        elif word[-1] in punctuation_list:
+            splited_text_cleaned.append(word.rstrip(word[-1]))
 
 # word count
-word_count = len(splited_text)
+word_count = len(splited_text_cleaned)
 
 # titlecase word count
-titlecases = [word for word in splited_text if word.isalpha() and word.istitle() and not word.isupper()]
+titlecases = [word for word in splited_text_cleaned if word.isalpha() and word.istitle() and not word.isupper()]
 titlecases_count = len(titlecases)
 
 # uppercase word count
-upppercases = [word for word in splited_text if word.isalpha() and word.isupper()]
+upppercases = [word for word in splited_text_cleaned if word.isalpha() and word.isupper()]
 upppercases_count = len(upppercases)
 
 # lowercase word count
-lowercases = [word for word in splited_text if word.isalpha() and word.islower()]
+lowercases = [word for word in splited_text_cleaned if word.isalpha() and word.islower()]
 lowercases_count = len(lowercases)
 
 # number count
-numbers = [word for word in splited_text if word.isdigit()]
+numbers = [word for word in splited_text_cleaned if word.isdigit()]
     # adding words, that contains both alphabets and numbers
     ## Tady mi to nedalo pokoj, tak jsem si pohral a pridal i tuto variantu, ktera pojme i pripad v textu cislo '1'. kde se objevuje vyraz '30N'.
-for word in splited_text:
+for word in splited_text_cleaned:
     if any(character.isdigit() for character in word) and any(character.isalpha() for character in word):
         empty_word = ''
         filtered_word = empty_word.join(character for character in word if character.isdigit())
@@ -128,7 +138,7 @@ sum_of_numbers = sum(numbers_integers)
 
 # finding maximal lenght of word in text
 lenghts_of_words = []
-for word in splited_text:
+for word in splited_text_cleaned:
     lenghts_of_words.append(len(word))
 max_lenght = max(lenghts_of_words)
 
